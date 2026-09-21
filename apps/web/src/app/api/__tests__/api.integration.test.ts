@@ -48,6 +48,7 @@ type PayData = {
   paymentStatus: string;
   subscriptionId: string;
   subscriptionStatus: string;
+  currentPeriodEnd: string | null;
 };
 
 async function createPayOrder(sessionId: string, planType: "monthly" | "yearly" = "monthly", key = uuid()) {

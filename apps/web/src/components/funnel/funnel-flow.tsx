@@ -251,8 +251,8 @@ export function FunnelFlow() {
     }
   }
 
-  function pickAndNext<K extends keyof FunnelForm>(name: K, value: FunnelForm[K]) {
-    form.setValue(name, value, { shouldValidate: true, shouldDirty: true });
+  function pickAndNext(name: keyof FunnelForm, value: FunnelForm[keyof FunnelForm]) {
+    form.setValue(name, value as never, { shouldValidate: true, shouldDirty: true });
     window.setTimeout(() => {
       void goNext();
     }, 180);
