@@ -1,0 +1,50 @@
+﻿### a. POST /api/session
+HTTP 000
+{"sessionId":"e0m512jy2o2urik5tn5y5x31","expiresAt":"2026-09-28T03:05:42.252Z"} __HTTP__:201
+
+SESSION_ID=
+
+### b. PATCH /api/progress step=1 gender=male
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"ca26b456-2849-4ebc-a13a-93816ab0d45c"} __HTTP__:400
+
+### c. PATCH /api/progress step=1 gender=male (repeat)
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"c928a895-37bc-4132-ad89-f2ada4a80da5"} __HTTP__:400
+
+### d. PATCH /api/progress step=3 age=25
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"50fcb81d-68b9-4289-a942-050c7eb41bba"} __HTTP__:400
+
+### e. GET /api/progress (merged)
+HTTP 000
+{"code":400,"message":"Invalid request","requestId":"038186b1-6013-45bf-8208-bd28dfe7be0d","details":{"formErrors":[],"fieldErrors":{"sessionId":["String must contain at least 1 character(s)"]}}} __HTTP__:400
+
+### f. POST /api/assessment/submit
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"2c02c46f-44e6-43a5-b164-e33cf648c5c6"} __HTTP__:400
+
+### g. GET /api/result (unpaid)
+HTTP 000
+{"code":400,"message":"Invalid request","requestId":"27fdbe04-8bb9-4fb4-bd29-f91d2acb9ed7","details":{"formErrors":[],"fieldErrors":{"sessionId":["String must contain at least 1 character(s)"]}}} __HTTP__:400
+
+### h. POST /api/pay
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"2eae48dc-8e13-430b-9a24-2d3943704ac5"} __HTTP__:400
+
+### i. POST /api/pay (same key)
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"ec3f281f-8ca1-4433-a2a2-73a78e14477c"} __HTTP__:400
+
+### j. GET /api/result (paid)
+HTTP 000
+{"code":400,"message":"Invalid request","requestId":"dfc79fcd-626b-492e-9e43-2ef07658729d","details":{"formErrors":[],"fieldErrors":{"sessionId":["String must contain at least 1 character(s)"]}}} __HTTP__:400
+
+### illegal-1. PATCH age=abc
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"0ed365a6-20fc-4475-9e94-fe074375be8c"} __HTTP__:400
+
+### illegal-2. POST /api/pay planType=hack
+HTTP 000
+{"code":400,"message":"Invalid JSON","requestId":"1e4c9944-ce56-494e-855a-ea9ef502264b"} __HTTP__:400
+

@@ -1,0 +1,52 @@
+﻿### a. POST /api/session
+HTTP 201
+{"sessionId":"ykd3d8x1bacq4d01ovkf7gi7","expiresAt":"2026-09-28T03:08:03.002Z"}
+
+SESSION_ID=ykd3d8x1bacq4d01ovkf7gi7
+
+### b. PATCH /api/progress step=1 gender=male
+HTTP 200
+{"data":{"gender":"male","goal":null,"age":null,"heightCm":null,"weightKg":null,"targetWeightKg":null,"activityLevel":null},"stepCompleted":1,"expiresAt":"2026-09-28T03:08:03.756Z"}
+
+### c. PATCH /api/progress step=1 gender=male (repeat)
+HTTP 200
+{"data":{"gender":"male","goal":null,"age":null,"heightCm":null,"weightKg":null,"targetWeightKg":null,"activityLevel":null},"stepCompleted":1,"expiresAt":"2026-09-28T03:08:04.371Z"}
+
+### d. PATCH /api/progress step=3 age=25
+HTTP 200
+{"data":{"gender":"male","goal":null,"age":25,"heightCm":null,"weightKg":null,"targetWeightKg":null,"activityLevel":null},"stepCompleted":3,"expiresAt":"2026-09-28T03:08:04.947Z"}
+
+### e. GET /api/progress (merged)
+HTTP 200
+{"data":{"gender":"male","goal":null,"age":25,"heightCm":null,"weightKg":null,"targetWeightKg":null,"activityLevel":null},"stepCompleted":3,"expiresAt":"2026-09-28T03:08:04.947Z"}
+
+### f. POST /api/assessment/submit
+HTTP 201
+{"resultId":"cmuao0pte000nukkc88rbbzsx"}
+
+### g. GET /api/result (unpaid)
+HTTP 200
+{"bmi":22.9,"recommendedCalories":2594}
+
+### h. POST /api/pay
+HTTP 200
+{"code":0,"message":"ok","data":{"subscriptionId":"cmuao0nd2000jukkcrbug9bci","status":"active"},"requestId":"98e4ce5c-c79e-41d9-9d9e-932f8a12f0f0"}
+
+PAY_KEY=97f64971-8c69-4081-8737-f13918710fdc
+
+### i. POST /api/pay (same key)
+HTTP 200
+{"code":0,"message":"ok","data":{"subscriptionId":"cmuao0nd2000jukkcrbug9bci","status":"active"},"requestId":"b2e10ee6-dc34-4e72-8b88-f0d434f66bec"}
+
+### j. GET /api/result (paid)
+HTTP 200
+{"bmi":22.9,"recommendedCalories":2594,"targetDate":"2026-11-30","algorithmVersion":"v1.0-Mifflin-StJeor","weightProjection":[{"week":0,"date":"2026-09-21","weightKg":70},{"week":1,"date":"2026-09-28","weightKg":69.5},{"week":2,"date":"2026-10-05","weightKg":69},{"week":3,"date":"2026-10-12","weightKg":68.5},{"week":4,"date":"2026-10-19","weightKg":68},{"week":5,"date":"2026-10-26","weightKg":67.5},{"week":6,"date":"2026-11-02","weightKg":67},{"week":7,"date":"2026-11-09","weightKg":66.5},{"week":8,"date":"2026-11-16","weightKg":66},{"week":9,"date":"2026-11-23","weightKg":65.5},{"week":10,"date":"2026-11-30","weightKg":65}]}
+
+### illegal-1. PATCH age=abc
+HTTP 400
+{"code":400,"message":"Invalid request","requestId":"a6c6b1ff-c018-4e1b-83ef-8fde9b050598","details":{"formErrors":[],"fieldErrors":{"data":["Expected number, received string"]}}}
+
+### illegal-2. POST /api/pay planType=hack
+HTTP 400
+{"code":400,"message":"Invalid request","requestId":"acd771de-aeba-4492-9cec-3c15c8d5ab03","details":{"formErrors":[],"fieldErrors":{"planType":["Invalid enum value. Expected 'monthly' | 'yearly', received 'hack'"]}}}
+

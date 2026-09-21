@@ -1,0 +1,15 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+confirmModulesPurge: false
+
+publicHoistPattern:
+  - "*prisma*"
+  - "*@prisma/*"
+
+allowBuilds:
+  prisma: true
+  "@prisma/client": true
+  "@prisma/engines": true
+  esbuild: true

@@ -1,0 +1,13 @@
+node_modules
+.next
+dist
+coverage
+.env
+.env.test
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.turbo
+.vercel
+prisma/migrations/**/migration_lock.toml.bak

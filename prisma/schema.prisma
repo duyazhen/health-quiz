@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubscriptionStatus {
+  free
+  active
+}
+
+enum PlanType {
+  monthly
+  yearly
+}
+
+enum PaymentStatus {
+  pending
+  success
+  failed
+}
+
+model User {
+  id        String   @id @default(cuid())
+  sessionId String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  progress     AssessmentProgress?
+  healthResult HealthResult?
+  subscription Subscription?
+
+  @@index([sessionId, expiresAt])
+  @@map("users")
+}
+
+model AssessmentProgress {
+  id             String   @id @default(cuid())
+  userId         String
+  gender         String?
+  goal           String?
+  age            Int?
+  heightCm       Decimal? @db.Decimal(5, 2)
+  weightKg       Decimal? @db.Decimal(5, 2)
+  targetWeightKg Decimal? @db.Decimal(5, 2)
+  activityLevel  String?
+  stepCompleted  Int      @default(0)
+  answers        Json?
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+  @@map("assessment_progress")
+}
+
+model HealthResult {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  bmi                 Decimal   @db.Decimal(5, 2)
+  recommendedCalories Int
+  targetDate          DateTime?
+  rawInputs           Json
+  algorithmVersion    String
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("health_results")
+}
+
+model Subscription {
+  id               String             @id @default(cuid())
+  userId           String             @unique
+  status           SubscriptionStatus @default(free)
+  planType         PlanType?
+  paidAt           DateTime?
+  currentPeriodEnd DateTime?
+  updatedAt        DateTime           @default(now()) @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
+
+  @@index([userId])
+  @@map("subscriptions")
+}
+
+model Payment {
+  id               String        @id @default(cuid())
+  subscriptionId   String
+  planType         PlanType
+  amount           Decimal       @db.Decimal(10, 2)
+  status           PaymentStatus @default(pending)
+  paymentRef       String        @unique
+  idempotencyKey   String        @unique
+  requestIp        String
+  callbackAt       DateTime?
+  callbackPayload  Json?
+  createdAt        DateTime      @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([subscriptionId, status])
+  @@map("payments")
+}
